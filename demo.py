@@ -29,7 +29,7 @@ from tkinter.filedialog import Open
 import time
 
 flags.DEFINE_string('framework', 'tf', '(tf, tflite, trt')
-flags.DEFINE_string('weights', './checkpoints/yolov4-custom_last',
+flags.DEFINE_string('weights', './checkpoints/yolov4-custom_6000',
                     'path to weights file')
 flags.DEFINE_integer('size', 416, 'resize images to')
 flags.DEFINE_boolean('tiny', False, 'yolo or yolo-tiny')
@@ -54,12 +54,29 @@ config['cnn']['pretrained']=False
 config['predictor']['beamsearch']=False
 detector = Predictor(config)
 
+
+gui = Tk()
+gui.title('DEMO TKINTER')
+gui.geometry('1080x720')
+gui.attributes('-topmost',True)
+gui['bg'] = 'gray'
+
 def getPath():
     ftypes = [('Images file', '*.jpg'), ('All files', '*')]
     dlg = Open( filetypes = ftypes)
     print(dlg)
     fl = dlg.show()
     return fl
+string_Path = getPath()
+img_import = Image.open(string_Path)
+resize = img_import.resize((416,416),Image.ANTIALIAS)
+img = ImageTk.PhotoImage(resize)
+print(img)
+sImage = Label(gui, text='', image=img)
+sImage.place(x= 4, y=5)
+btn_detectImage = Button(gui, text='CHOOSE FILE', width=15, height=2, bg='blue', command=getPath)
+btn_detectImage.place(x=250, y=450)
+
 
 def main(_argv):
     # Definition of the parameters
@@ -86,27 +103,28 @@ def main(_argv):
         saved_model_loaded = tf.saved_model.load(FLAGS.weights, tags=[tag_constants.SERVING])
         infer = saved_model_loaded.signatures['serving_default']
     
-    gui = Tk()
-    gui.title('DEMO TKINTER')
-    gui.geometry('1080x720')
-    gui.attributes('-topmost',True)
-    gui['bg'] = 'gray'
+    # gui = Tk()
+    # gui.title('DEMO TKINTER')
+    # gui.geometry('1080x720')
+    # gui.attributes('-topmost',True)
+    # gui['bg'] = 'gray'
 
     
     # filePath = filedialog.askopenfilename(initialdir='./')
 
-    btn_detectImage = Button(gui, text='DETECT', width=15, height=2, bg='blue', command=getPath)
-    btn_detectImage.place(x=250, y=450)
-    img_import = Image.open(getPath())
-    resize = img_import.resize((416,416),Image.ANTIALIAS)
-    img = ImageTk.PhotoImage(resize)
-    print(img)
-    sImage = Label(gui, text='', image=img)
-    sImage.place(x= 4, y=5)
+    # btn_detectImage = Button(gui, text='DETECT', width=15, height=2, bg='blue', command=getPath)
+    # btn_detectImage.place(x=250, y=450)
+    
+    # img_import = Image.open(stringPath)
+    # resize = img_import.resize((416,416),Image.ANTIALIAS)
+    # img = ImageTk.PhotoImage(resize)
+    # print(img)
+    # sImage = Label(gui, text='', image=img)
+    # sImage.place(x= 4, y=5)
 
 
-    input_size = 416
-    vid = cv2.imread(getPath())
+    input_size = 416 
+    vid = cv2.imread(string_Path)
     frame_size = vid.shape[:2]
     image_data = cv2.resize(vid, (input_size, input_size))
     image_data = image_data / 255.
