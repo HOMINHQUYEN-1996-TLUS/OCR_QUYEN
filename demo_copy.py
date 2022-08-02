@@ -82,7 +82,7 @@ btn_detectImage = Button(gui, text='CHOOSE FILE', width=15, height=2, bg='blue',
 btn_detectImage.place(x=250, y=450)
 
 
-def main(_argv):
+def main():
     # Definition of the parameters
     max_cosine_distance = 0.4
     nn_budget = None
@@ -268,10 +268,10 @@ def main(_argv):
 
     gui.mainloop()
 
+main()
 
-
-if __name__ == '__main__':
-    try:
-        app.run(main)
-    except SystemExit:
-        pass
+# if __name__ == '__main__':
+#     try:
+#         app.run(main)
+#     except SystemExit:
+#         pass
